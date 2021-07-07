@@ -55,8 +55,7 @@
 @using (Html.BeginForm("Index", "Profile", FormMethod.Get))
 {
     <p class="lead">
-        Find by title: @Html.TextBox("TitleComposition", ViewBag.CurrentFilter as string)
-        <br />
+        Find by title: @Html.TextBox("TitleComposition", ViewBag.CurrentFilter as string)   
         <input class="btn btn-secondary" type="submit" value="Search" />
     </p>
 }

@@ -117,11 +117,11 @@ namespace BL.Manager
 
         public void Update(Composition composition)
         {
-            _context.Composition.Remove(composition);
-            _context.SaveChanges();
-            composition.Id = 0;
-            _context.Composition.Add(composition);
-            _context.SaveChanges();
+            //_context.Composition.Remove(composition);
+            //_context.SaveChanges();
+            //composition.Id = 0;
+            //_context.Composition.Add(composition);
+            //_context.SaveChanges();
         }
     }
 }
