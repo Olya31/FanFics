@@ -1,0 +1,41 @@
+﻿@using CloudinaryDotNet;
+@inject Cloudinary Cloudinary
+@model FanFics.ViewModels.ChapterViewModel
+@{
+    ViewBag.Title = "Add new chapter";
+}
+<br />
+<h2 style="text-align:center">Add a new chapter</h2>
+<br />
+<form asp-action="Add" asp-controller="Chapter"  enctype="multipart/form-data">
+    <div class="card text-white bg-secondary mb-3">
+        <div class="card-body">
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Title</label>
+                <div class="col-sm-10">
+                    <input type="text" name="Title" value="" class="form-control" id="author" placeholder="Enter author">
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Text</label>
+                <div class="col-sm-10">
+                    <textarea class="form-control" value="" name="Text" rows="5"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Add image</label>
+                <div class="col-sm-10">
+                    <div class="photos">
+                        <input type="file" name="image" multiple accept="image/gif, image/jpeg, image/png">
+                    </div>
+                </div>
+            </div>
+        </div>        
+        <button type="submit" class="btn btn-secondary">Add</button>
+    </div>
+</form>
+

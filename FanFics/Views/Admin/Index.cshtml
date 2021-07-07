@@ -1,0 +1,92 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model IEnumerable<DAL.Models.User>
+@{
+    ViewBag.Title = @Localizer["UsersList"];
+}
+<br />
+<h2>@Localizer["Users"]</h2>
+<br />
+<div>
+    <input type="button" class="btn btn-outline-secondary col-2" id="delete" data-title="@Localizer["Delete"]" value="@Localizer["Delete"]">
+    <input type="button" class="btn btn-outline-secondary col-2" id="lock" data-title="@Localizer["Lock"]" value="@Localizer["Lock"]">
+    <input type="button" class="btn btn-outline-secondary col-2" id="unlock" data-title="@Localizer["Unlock"]" style="padding-right:30px" value="@Localizer["Unlock"]">
+    <input type="button" class="btn btn-outline-secondary col-2" id="rights" data-title="@Localizer["AccessRights"]" value="@Localizer["AccessRights"]">
+</div>
+<br />
+<table class="table table-hover">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">@Localizer["FullName"]</th>
+            <th scope="col">@Localizer["Email"]</th>
+            <th scope="col">@Localizer["Status"]</th>
+            <th scope="col">
+                <input type="checkbox" name="all" id="checkall" class="btn btn-outline-secondary"> @Localizer["Checking"]
+            </th>
+            <th scope="col">-</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ int rowNo = 0; }
+
+        @foreach (var user in Model)
+        {
+            <tr class="table-light">
+                <td>@(rowNo += 1)</td>
+                <td>@user.FullName</td>
+                <td>@user.Email</td>
+                @if (@user.IsLock == false)
+                {
+                    <td>UnLock</td>
+                }
+                else
+                {
+                    <td>Lock</td>
+                }
+                <td>
+                    <input type="checkbox" class="cb-element" name="checkItem" value="@user.Id">
+                </td>
+                <td>
+                    @Html.ActionLink("View", "Index", "Profile", routeValues: new { item = user.Id }, new { @class = "btn btn-secondary mb-0" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script src="https://snipp.ru/cdn/jquery/2.1.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="~/js/admin.js"></script>
+@section Style
+{
+    <style type="text/css">
+        a:hover {
+            color: red;
+            position: relative;
+        }
+
+        a[data-title]:hover:after {
+            content: attr(data-title);
+            padding: 4px 8px;
+            color: #333;
+            position: absolute;
+            left: 0;
+            top: 100%;
+            white-space: nowrap;
+            z-index: 20px;
+            -moz-border-radius: 5px;
+            -webkit-border-radius: 5px;
+            border-radius: 5px;
+            -moz-box-shadow: 0px 0px 4px #222;
+            -webkit-box-shadow: 0px 0px 4px #222;
+            box-shadow: 0px 0px 4px #222;
+            background-image: -moz-linear-gradient(top, #eeeeee, #cccccc);
+            background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #eeeeee),color-stop(1, #cccccc));
+            background-image: -webkit-linear-gradient(top, #eeeeee, #cccccc);
+            background-image: -moz-linear-gradient(top, #eeeeee, #cccccc);
+            background-image: -ms-linear-gradient(top, #eeeeee, #cccccc);
+            background-image: -o-linear-gradient(top, #eeeeee, #cccccc);
+        }
+    </style>
+}
+

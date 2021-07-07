@@ -1,0 +1,109 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@using CloudinaryDotNet;
+@inject IViewLocalizer Localizer
+@inject Cloudinary Cloudinary
+
+@model FanFics.ViewModels.ProfileViewModel
+
+@{
+    ViewBag.Title = "Profile";
+}
+<br />
+<h2>Profile</h2>
+<br />
+<div class="row justify-content-around">
+    <div class="col-2">
+        <div id="logo" style="height:30px; width:30px;">
+            <!-- This will render the image fetched from a remote HTTP URL using Cloudinary -->
+            @Html.Raw(Cloudinary.Api.UrlImgUp.Signed(true).Secure().Action("fetch").BuildImageTag("https://res.cloudinary.com/dzlq0fj8z/image/upload/v1625580810/ts0qhf3wqn0n3w8ygirk.png"))
+        </div>
+    </div>
+    <div class="card text-white bg-secondary mb-3 col-2" style="width: 39rem; height: 15rem;">
+        <div class="card-header">Your data</div>
+        <div class="card-body">
+            <div class="form-group row">
+                <label for="email" class="col-sm-2 col-form-label">Email</label>
+                <div class="col-sm-10">
+                    <p class="">@Model.User.Email</p>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="nickname" class="col-sm-2 col-form-label">Nickname</label>
+                <div class="col-sm-10">
+                    <p class="editable-text">@Model.User.NickName</p>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="fullName" class="col-sm-2 col-form-label">Full name</label>
+                <div class="col-sm-10">
+                    <p class="editable-text-fullname">@Model.User.FullName</p>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="birthday" class="col-sm-2 col-form-label">Birthday</label>
+                <div class="col-sm-10">
+                    <p class="datepicker">@Model.User.BirthDay.ToShortDateString()</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.ActionLink("Add", "Edit", "Profile", routeValues: null, new { @class = "btn btn-secondary mb-0" })
+<br />
+<h2 style="text-align:center">List compositions</h2>
+<br />
+@using (Html.BeginForm("Index", "Profile", FormMethod.Get))
+{
+    <p class="lead">
+        Find by title: @Html.TextBox("TitleComposition", ViewBag.CurrentFilter as string)
+        <br />
+        <input class="btn btn-secondary" type="submit" value="Search" />
+    </p>
+}
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">
+                @Html.ActionLink("Title", "Index", new { sortOrder = ViewBag.TitleSortParm })
+            </th>
+            <th scope="col">
+                @Html.ActionLink("Fandom", "Index", new { sortOrder = ViewBag.FandomSortParm })
+            </th>
+            <th scope="col">Short Description</th>
+            <th scope="col">
+                @Html.ActionLink("Date added", "Index", new { sortOrder = ViewBag.DateSortParm })
+            </th>
+            <th scope="col">-</th>
+            <th scope="col">-</th>
+            <th scope="col">-</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Compositions)
+        {
+        <tr class="table-light">
+            <td>@item.Id</td>
+            <td>@item.TitleComposition</td>
+            <td>@item.Fandom</td>
+            <td>@item.ShortDescription</td>
+            <td>@item.DateAdded</td>
+            <td>@Html.ActionLink("Edit", "Edit", "Composition", routeValues: new { id = item.Id }, new { @class = "btn btn-outline-secondary" })</td>
+            <td>@Html.ActionLink("Delete", "Delete", "Composition", routeValues: new { id = item.Id }, new { @class = "btn btn-outline-secondary" })</td>
+            <td>@Html.ActionLink("Readonly", "Readonly", "Composition", routeValues: new { id = item.Id }, new { @class = "btn btn-outline-secondary" })</td>
+        </tr>
+        }
+    </tbody>
+</table>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/jquery.jeditable/jquery.jeditable.js"></script>
+<script src="~/lib/jquery.jeditable/jquery.jeditable.autogrow.js"></script>
+<script src="~/lib/jquery.jeditable/jquery.jeditable.datepicker.js"></script>
+<script src="~/js/profile.js"></script>
+
+<style>
+    img {
+        height: 230px;
+        width: 230px;
+    }
+</style>

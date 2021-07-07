@@ -1,0 +1,30 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model FanFics.ViewModels.LoginViewModel
+    <br />
+<h2>@Localizer["Header"]</h2>
+<br />
+<form method="post" asp-controller="Account" asp-action="Login"
+      asp-route-returnUrl="@Model.ReturnUrl">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div>
+        <label asp-for="Email">@Localizer["Email"]</label><br />
+        <input asp-for="Email" />
+        <span asp-validation-for="Email"></span>
+    </div>
+    <br />
+    <div>
+        <label asp-for="Password">@Localizer["Password"]</label><br />
+        <input asp-for="Password" />
+        <span asp-validation-for="Password"></span>
+    </div>
+    <br />
+    <div>
+        <label asp-for="RememberMe">@Localizer["RememberMe"]</label>
+        <input asp-for="RememberMe" />
+    </div>
+    <br />
+    <div>
+        <input type="submit" class="btn btn-secondary my-2 my-sm-0" value="@Localizer["Login"]" />
+    </div>
+</form>

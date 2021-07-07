@@ -1,0 +1,14 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    string theme;
+    if (HttpContextAccessor.HttpContext.Request.Cookies.TryGetValue("theme", out theme))
+    {
+        <link id="stylesheet" rel="stylesheet" href="@theme" />
+    }
+    else
+    {
+        <link id="stylesheet" rel="stylesheet" href="~/lib/bootstrap/dist/css/dark.css" />
+    }
+    var isDark = !string.IsNullOrWhiteSpace(theme)
+                                && string.Equals(theme, "/lib/bootstrap/dist/css/dark.css", StringComparison.OrdinalIgnoreCase);
+}

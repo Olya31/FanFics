@@ -1,0 +1,81 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@inject IViewLocalizer Localizer
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - @Localizer["Title"]</title>
+    @await Html.PartialAsync("_SelectThemePartial")
+    <link rel="stylesheet" href="~/css/site.css" />
+    @RenderSection("Style", false)
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">@Localizer["Title"]</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarColor01">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" asp-area="" asp-controller="Home" asp-action="Index">@Localizer["TitleFanfiction"]</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Index">@Localizer["TitleUsers"]</a>
+                        </li>
+                        @if (this.User.IsInRole("Administrator"))
+                        {
+                            
+                        }
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item my-2 my-sm-0">
+                                <a class="nav-link" asp-area="" asp-controller="Profile" asp-action="Index">@Localizer["TitleProfile"]</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Logout">@Localizer["TitleLogout"]</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item me-sm-2">
+                                <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Register">@Localizer["TitleRegister"]</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Login">@Localizer["TitleLogin"]</a>
+                            </li>
+
+                        }
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Settings" asp-action="Settings">@Localizer["TitleSettings"]</a>
+                        </li>
+                    </ul>
+                    <form class="d-flex">
+                        <input class="form-control me-sm-2" type="text" placeholder="@Localizer["TitleSearch"]">
+                        <button class="btn btn-secondary my-2 my-sm-0" type="submit">@Localizer["TitleSearch"]</button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; @DateTime.Now.Year - @Localizer["Title"]
+        </div>
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
