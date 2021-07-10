@@ -7,5 +7,9 @@ namespace BL.Manager.Interface
     public interface IPhotoManager
     {
         Task<int> AddPhotoAsync(Photo photo, CancellationToken cancellationToken);
+
+        Task<Photo> GetPhotoAsync(int id, CancellationToken token);
+
+        Task DeleteAsync(int id, CancellationToken token);
     }
 }

@@ -110,18 +110,29 @@ namespace BL.Manager
         {
             var composition = await _context.Composition
                 .Include(c => c.Tags)
+                .Include(c => c.Chapters)
                 .SingleOrDefaultAsync(c => c.Id == id, token);
 
             return composition;
         }
 
-        public void Update(Composition composition)
+        public void EditComposition(Composition composition)
         {
-            //_context.Composition.Remove(composition);
-            //_context.SaveChanges();
-            //composition.Id = 0;
-            //_context.Composition.Add(composition);
-            //_context.SaveChanges();
+            var compositionDb = _context.Composition.Find(composition.Id);
+
+            if (compositionDb != null)
+            {
+                compositionDb.Author = composition.Author;
+                compositionDb.DateAdded = composition.DateAdded;
+                compositionDb.DateUpDate = DateTime.Now;
+                compositionDb.Fandom = composition.Fandom;
+                compositionDb.TitleComposition = composition.TitleComposition;
+                compositionDb.ShortDescription = composition.ShortDescription;
+                compositionDb.Tags = composition.Tags;
+                compositionDb.Chapters = composition.Chapters;
+                _context.Composition.Update(compositionDb);
+                _context.SaveChanges();
+            }
         }
     }
 }

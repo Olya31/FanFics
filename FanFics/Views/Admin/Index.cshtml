@@ -48,7 +48,7 @@
                     <input type="checkbox" class="cb-element" name="checkItem" value="@user.Id">
                 </td>
                 <td>
-                    @Html.ActionLink("View", "Index", "Profile", routeValues: new { item = user.Id }, new { @class = "btn btn-secondary mb-0" })
+                    <a class="btn btn-outline-secondary" asp-action="ViewUserProfile" asp-route-id="@user.Id">View</a>
                 </td>
             </tr>
         }

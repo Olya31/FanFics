@@ -1,4 +1,5 @@
 ﻿using DAL.Models;
+using FanFics.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -121,24 +122,24 @@ namespace FanFics.Controllers
             return Ok(true);
         }
 
-        //[HttpPost]
-        //public async Task<User> ViewPage(IEnumerable<Guid> selectedObjects)
-        //{
-        //    try
-        //    {
-        //        foreach (var guid in selectedObjects)
-        //        {
-        //            var user = await _userManager.FindByIdAsync(guid.ToString());
-        //            return user;
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex);
-        //    }
+        public async Task<IActionResult> ViewUserProfile(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            UserViewModel model = new UserViewModel
+            {
+                Id = user.Id,
+                Email = user.Email,
+                FullName = user.FullName,
+                NickName = user.NickName,
+                BirthDay = user.BirthDay
+            };
 
-        //    return Ok(true);
-        //}
+            return RedirectToAction("Index", "Profile", model);
+        }
 
         private async Task UnLockProcessingAsync(IEnumerable<Guid> selectedObjects)
         {

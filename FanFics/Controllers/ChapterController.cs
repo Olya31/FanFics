@@ -16,6 +16,7 @@ namespace FanFics.Controllers
     {
         private readonly ILogger<CompositionController> _logger;
         private readonly IChapterManager _chapterManager;
+        private readonly ICompositionManager _compositionManager;
         private readonly Cloudinary _cloudinary;
         private readonly IPhotoManager _photoManager;
 
@@ -23,25 +24,76 @@ namespace FanFics.Controllers
             ILogger<CompositionController> logger,
             IChapterManager chapterManager,
             Cloudinary cloudinary,
-            IPhotoManager photoManager)
+            IPhotoManager photoManager,
+            ICompositionManager compositionManager)
         {
             _logger = logger;
             _chapterManager = chapterManager;
             _cloudinary = cloudinary;
             _photoManager = photoManager;
+            _compositionManager = compositionManager;
         }
 
         [HttpGet]
-        public ActionResult Index()
-        {            
+        public ActionResult Index(CompositionViewModel composition)
+        {
+            ViewBag.Composition = composition.Id;
             return View("Add");
         }
 
         [HttpGet]
-        public IActionResult Image(int idChapter)
+        public async Task<IActionResult> Edit(int? id, CancellationToken token)
         {
-            return View("AddImage", idChapter);
+
+            if (id.HasValue)
+            {
+                var chapterViewModels = new ChapterViewModel();
+
+                var chapter = await _chapterManager.GetChapterByIdAsync(id.Value, token);
+
+                var chapterViewModel = chapterViewModels.ToChapterViewModel(chapter);
+
+                return View("edit", chapterViewModel);
+            }
+            else
+            {
+                return View("Chapters");
+            }
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(ChapterViewModel chapter, CancellationToken token)
+        {
+            var photoId = await UploadPhotoAsync(chapter.Image, token);
+            if (photoId.HasValue)
+            {
+                await _photoManager.DeleteAsync(chapter.PhotoId, token);
+                var photo = await _photoManager.GetPhotoAsync(photoId.Value, token);
+                _chapterManager.Update(chapter.ToChapter(photo));
+            }
+            else
+            {
+                var photo = await _photoManager.GetPhotoAsync(chapter.PhotoId, token);
+                _chapterManager.Update(chapter.ToChapter(photo));
+            }
+
+            return RedirectToAction("Chapters", new { compositionId = chapter.CompositionId});
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> Chapters(int? compositionId, CancellationToken token)
+        {
+            var composition = await _compositionManager.GetCompositionByIdAsync(compositionId.Value, token);
+
+            var chapterViewModels = new ChapterViewModel();
+
+            var chapters = composition.Chapters;
+
+            var chapterViewModel = chapterViewModels.ToChapterViewModels(chapters);
+
+            return View("Chapters", chapterViewModel);
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> Add(
@@ -49,20 +101,21 @@ namespace FanFics.Controllers
             CancellationToken token)
         {
             var photoId = await UploadPhotoAsync(chapter.Image, token);
+
             var model = chapter.ToChapter(photoId ?? 0);
             await _chapterManager.AddChapterAsync(model, token);
 
-            return RedirectToAction("Index", "Profile");
+            return RedirectToAction("Edit", "Composition", new { id = model.CompositionId });
         }
 
         [HttpGet]
-        public async Task<IActionResult> DeleteAsync(int? id, CancellationToken token)
+        public async Task<IActionResult> DeleteAsync(int? id, int? compositionId, CancellationToken token)
         {
             if (id.HasValue)
             {
                 await _chapterManager.DeleteChapterAsync(id.Value, token);
 
-                return RedirectToAction("Index", "Profile");
+                return RedirectToAction("Chapters", new { id = compositionId.Value });
             }
 
             return NotFound();
@@ -97,7 +150,15 @@ namespace FanFics.Controllers
             };
 
             return await _photoManager.AddPhotoAsync(phote, cancellationToken);
-        }   
+        }
+
+        public async Task<ActionResult> Read(int?  id,  CancellationToken token /*int page = 1*/)
+        { 
+            var chapterViewModels = new ChapterViewModel();
+            var chapter = await _chapterManager.GetChapterByIdAsync(id.Value, token);
+            var chapterViewModel = chapterViewModels.ToChapterViewModel(chapter);
+            return View("Read", chapterViewModel);
+        }
     }
 }
 

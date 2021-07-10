@@ -70,6 +70,7 @@ namespace FanFics
             services.AddScoped<IChapterManager, ChapterManager>();
             services.AddScoped<IPhotoManager, PhotoManager>();
             services.AddScoped<ITagsManager, TagsManager>();
+            services.AddScoped<IRatingManager, RatingManager>();
 
             services.AddLocalization(options => options.ResourcesPath = "Resources");
 

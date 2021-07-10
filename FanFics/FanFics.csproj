@@ -9,8 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AjaxControlToolkit" Version="20.1.0" />
     <PackageReference Include="CloudinaryDotNet" Version="1.15.2" />
-    <PackageReference Include="dropzone" Version="4.3.0" />
     <PackageReference Include="MailKit" Version="2.13.0" />
     <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.7" />
@@ -29,7 +29,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\lib\markdown\" />
+    <Folder Include="Views\Bookmarks\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\image\StarFade.gif" />
+    <None Include="wwwroot\image\StarGlow.gif" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,6 @@
-﻿namespace DAL.Models
+﻿using System;
+
+namespace DAL.Models
 {
     public sealed class Rating
     {
@@ -10,8 +12,12 @@
 
         public int RatingCounter { get; set; }
 
+        public string Comment { get; set; }
+
         public int UserId { get; set; }
 
         public User User { get; set; }
+
+        public DateTime ThisDateTime { get; set; }
     }
 }

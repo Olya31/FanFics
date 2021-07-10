@@ -1,6 +1,8 @@
 ﻿using BL.Manager.Interface;
 using DAL;
 using DAL.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -32,5 +34,37 @@ namespace BL.Manager
                 await _context.SaveChangesAsync(token);
             }
         }
+
+        public IEnumerable<Chapter> GetChapters()
+        {
+            var chapter = _context.Chapter.Include(c => c.Photo);
+
+            return chapter;
+        }
+
+        public async Task<Chapter> GetChapterByIdAsync(int id, CancellationToken token)
+        {
+            var chapter = await _context.Chapter
+                .Include(c => c.Photo)
+                .SingleOrDefaultAsync(c => c.Id == id, token);
+
+            return chapter;
+        }
+
+        public void Update(Chapter chapter)
+        {
+            var chapterDb = _context.Chapter.Find(chapter.Id);
+
+            if (chapterDb != null)
+            {
+                chapterDb.Title = chapter.Title;
+                chapterDb.Text = chapter.Text;
+                chapterDb.PhotoId = chapter.PhotoId;
+                chapterDb.Photo = chapter.Photo;
+                _context.Chapter.Update(chapterDb);
+                _context.SaveChanges();
+            }
+        }
+
     }
 }

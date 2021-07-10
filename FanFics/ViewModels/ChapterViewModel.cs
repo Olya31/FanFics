@@ -14,9 +14,14 @@ namespace FanFics.ViewModels
 
         public IFormFile Image { get; set; }
 
+        public int PhotoId { get; set; }
+
         public Photo Photo { get; set; }
 
-        public Chapter ToChapter(int photoId)
+        public string Title { get; set; }
+       
+
+        public Chapter ToChapter(int photoId, Photo photo = null)
         {
             return new Chapter
             {
@@ -24,6 +29,21 @@ namespace FanFics.ViewModels
                 CompositionId = this.CompositionId,
                 Text = this.Text,
                 PhotoId = photoId,
+                Title = this.Title ,
+                Photo = photo
+            };
+        }
+
+        public Chapter ToChapter(Photo photo)
+        {
+            return new Chapter
+            {
+                Id = this.Id,
+                CompositionId = this.CompositionId,
+                Text = this.Text,
+                PhotoId = photo.Id,
+                Title = this.Title,
+                Photo = photo
             };
         }
 
@@ -38,7 +58,10 @@ namespace FanFics.ViewModels
             {
                 Id = chapter.Id,
                 CompositionId = chapter.CompositionId,
-                Text = chapter.Text
+                Text = chapter.Text,
+                Title = chapter.Title,
+                PhotoId = chapter.PhotoId,
+                Photo = chapter.Photo
             };
         }
 

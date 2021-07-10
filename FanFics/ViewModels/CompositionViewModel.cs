@@ -22,6 +22,8 @@ namespace FanFics.ViewModels
         
         public List<Tags> Tags { get; set; }
 
+        public List<Chapter> Chapters { get; set; }
+
         public Composition ToComposition()
         {
             return new Composition
@@ -51,9 +53,10 @@ namespace FanFics.ViewModels
                 ShortDescription = composition.ShortDescription,
                 DateAdded = composition.DateAdded,
                 Fandom = composition.Fandom,
-                DateUpDate = composition.DateUpDate,
+                DateUpDate = DateTime.Now,
                 Author = composition.Author,
                 Tags = composition.Tags,
+                Chapters = composition.Chapters
             };
         }
 

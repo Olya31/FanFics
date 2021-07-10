@@ -26,7 +26,7 @@ namespace BL.Manager
 
         public IEnumerable<Tags> GetTagsSearch(string Prefix)
         {
-            var tags = _context.Tags.ToList().Where(c => c.TagName.StartsWith(Prefix)).Select(x => new Tags
+            var tags = _context.Tags.ToList().Where(c => c.TagName.ToLower().StartsWith(Prefix.ToLower())).Select(x => new Tags
             {
                 Id = x.Id,
                 TagName = x.TagName

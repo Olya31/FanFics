@@ -1,5 +1,4 @@
 ﻿using BL.Manager.Interface;
-using DAL;
 using DAL.Models;
 using FanFics.ViewModels;
 using Microsoft.AspNetCore.Identity;
@@ -25,7 +24,7 @@ namespace FanFics.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(string titleComposition, string sortOrder, string id)
+        public async Task<IActionResult> Index(string titleComposition, string sortOrder, User user)
         {
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewBag.FandomSortParm = sortOrder == "Fandom" ? "fandom_desc" : "Fandom";
@@ -34,33 +33,32 @@ namespace FanFics.Controllers
             var sortComposition = _compositionManager.Sort(sortOrder);
             var filterComposition = _compositionManager.Filter(titleComposition);
 
-            var items = await GetItemInView(titleComposition, sortOrder, sortComposition, filterComposition, id);
+            var items = await GetItemInView(titleComposition, sortOrder, sortComposition, filterComposition, user);
 
             return View("Index", items);
         }
-
-
 
         public async Task<ProfileViewModel> GetItemInView(
             string titleComposition, 
             string sortOrder, 
             List<Composition> sortComposition,
             List<Composition> filterComposition,
-            string id)
+            User user)
         {
             var compositionViewModel = new CompositionViewModel();
             var compositionsList = _compositionManager.GetCompositions();
 
-            var item = new ProfileViewModel();            
+            var item = new ProfileViewModel();
 
-            if(id != null)
-            {                
-                item.User = await _userManager.FindByIdAsync(id.ToString());
+            if (user.Email != null)
+            {
+                item.User = user;
             }
             else
             {
                 item.User = await GetCurrentUserAsync();
-            }
+            }          
+            
             if (titleComposition == null && sortOrder == null)
             {
                 item.Compositions = compositionViewModel.ToCompositionViewModels(compositionsList);
@@ -122,5 +120,6 @@ namespace FanFics.Controllers
         {
             return RedirectToAction("Index", "Composition");
         }
+
     }
 }

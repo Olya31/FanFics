@@ -1,12 +1,7 @@
-﻿
-@model FanFics.ViewModels.CompositionViewModel
+﻿@model FanFics.ViewModels.CompositionViewModel
 @{
     ViewBag.Title = "Edit composition";
 }
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-<link href="~/css/markdown-editor.css" rel="stylesheet" />
-<link href="~/lib/highlight/highlight.min.css" rel="stylesheet" />
 <br />
 <h2 style="text-align:center">Edit "@Model.TitleComposition" composition</h2>
 <br />
@@ -32,7 +27,7 @@
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Short Description</label>
                 <div class="col-sm-10">
-                    <textarea id="kv-01" rows="15" name="ShortDescription" class="markdown">@Model.ShortDescription</textarea>
+                    <textarea rows="15" name="ShortDescription" class="form-control">@Model.ShortDescription</textarea>
                 </div>
             </div>
         </div>
@@ -50,7 +45,7 @@
                 <div class="col-sm-10">
                     <div class="frmSearch">
                         <div id="tags">
-                            @for (var i = 0; i < Model.Tags.Count; i ++)
+                            @for (var i = 0; i < Model.Tags.Count; i++)
                             {
                                 <div class="tag">
                                     <input name="Tags[@i].TagName" value="@Model.Tags[i].TagName" readonly />
@@ -61,8 +56,6 @@
                         <p>
                             <input type="text" id="tag" class="form-control" placeholder="Enter tag" />
                         </p>
-                        <span id="addTag" value="@Model.Id">Add tag</span>
-                        @*@Html.ActionLink("Add", "ChapterAdd", "Composition", routeValues:  new { id = Model.Id }, new { @class = "btn btn-secondary" })*@
                     </div>
                 </div>
             </div>
@@ -70,43 +63,17 @@
         <div class="card-body">
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Chapter</label>
-                <div class="col-sm-10">
-                    @*@Html.ActionLink("Add", "ChapterAdd", "Composition", routeValues: null, new { @class = "btn btn-secondary" })*@
+                <div class="col-sm-10">                   
+                    @Html.ActionLink("Add chapter", "ChapterAdd", "Composition", routeValues: new { id = Model.Id }, new { @class = "btn btn-secondary" })
                 </div>
             </div>
         </div>
         <button type="submit" class="btn btn-secondary">Edit</button>
     </div>
 </form>
-
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
-
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-@*   <script src="http://twemoji.maxcdn.com/2/twemoji.min.js?11.0"></script>*@
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-@*<script src="~/lib/purify/purify.min.js"></script>*@
-
-    <script src="~/lib/markdown-it/markdown-it.min.js"></script>
-    <script src="~/lib/markdown-it/markdown-it-deflist.min.js"></script>
-    <script src="~/lib/markdown-it/markdown-it-footnote.min.js"></script>
-    <script src="~/lib/markdown-it/markdown-it-abbr.min.js"></script>
-    <script src="~/lib/markdown-it/markdown-it-sub.min.js"></script>
-    <script src="~/lib/markdown-it/markdown-it-sup.min.js"></script>
-
-
-    <script src="~/lib/markdown-it/markdown-it-ins.min.js"></script>
-    <script src="~/lib/markdown-it/markdown-it-mark.min.js"></script>
-    <script src="~/lib/markdown-it/markdown-it-smartarrows.min.js"></script>
-    <script src="~/lib/markdown-it/markdown-it-checkbox.min.js"></script>
-    <script src="~/lib/markdown-it/markdown-it-cjk-breaks.min.js"></script>
-    <script src="~/lib/markdown-it/markdown-it-emoji.min.js"></script>
-    <script src="~/lib/highlight/highlight.min.js"></script>
-
-    <script src="~/lib/markdown-it/markdown-editor.js"></script>
-
 <script type="text/javascript" src="~/js/composition.js"></script>
-@*<script src="~/lib/locales/en.js"></script>
-    <script src="~/lib/locales/ru.js"></script>*@
 <style>
     .ui-autocomplete {
         position: absolute;

@@ -19,6 +19,8 @@ namespace BL.Manager.Interface
 
         Task<Composition> GetCompositionByIdAsync(int id, CancellationToken token);
 
-        void Update(Composition composition);
+        void EditComposition(Composition composition);
+
+        //void Update(Composition composition);
     }
 }

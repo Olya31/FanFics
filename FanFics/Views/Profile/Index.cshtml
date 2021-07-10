@@ -48,17 +48,18 @@
         </div>
     </div>
 </div>
-@Html.ActionLink("Add", "Edit", "Profile", routeValues: null, new { @class = "btn btn-secondary mb-0" })
+
 <br />
 <h2 style="text-align:center">List compositions</h2>
 <br />
 @using (Html.BeginForm("Index", "Profile", FormMethod.Get))
 {
     <p class="lead">
-        Find by title: @Html.TextBox("TitleComposition", ViewBag.CurrentFilter as string)   
+        Find by title: @Html.TextBox("TitleComposition", ViewBag.CurrentFilter as string)
         <input class="btn btn-secondary" type="submit" value="Search" />
     </p>
 }
+@Html.ActionLink("Add", "Edit", "Profile", routeValues: null, new { @class = "btn btn-secondary mb-0" })
 <table class="table table-hover">
     <thead>
         <tr>
@@ -76,21 +77,23 @@
             <th scope="col">-</th>
             <th scope="col">-</th>
             <th scope="col">-</th>
+            <th scope="col">-</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model.Compositions)
         {
-        <tr class="table-light">
-            <td>@item.Id</td>
-            <td>@item.TitleComposition</td>
-            <td>@item.Fandom</td>
-            <td>@item.ShortDescription</td>
-            <td>@item.DateAdded</td>
-            <td>@Html.ActionLink("Edit", "Edit", "Composition", routeValues: new { id = item.Id }, new { @class = "btn btn-outline-secondary" })</td>
-            <td>@Html.ActionLink("Delete", "Delete", "Composition", routeValues: new { id = item.Id }, new { @class = "btn btn-outline-secondary" })</td>
-            <td>@Html.ActionLink("Readonly", "Readonly", "Composition", routeValues: new { id = item.Id }, new { @class = "btn btn-outline-secondary" })</td>
-        </tr>
+            <tr class="table-light">
+                <td>@item.Id</td>
+                <td>@item.TitleComposition</td>
+                <td>@item.Fandom</td>
+                <td>@item.ShortDescription</td>
+                <td>@item.DateAdded</td>
+                <td>@Html.ActionLink("Edit", "Edit", "Composition", routeValues: new { id = item.Id }, new { @class = "btn btn-outline-secondary" })</td>
+                <td>@Html.ActionLink("Delete", "Delete", "Composition", routeValues: new { id = item.Id }, new { @class = "btn btn-outline-secondary" })</td>
+                <td>@Html.ActionLink("Readonly", "Readonly", "Composition", routeValues: new { id = item.Id }, new { @class = "btn btn-outline-secondary" })</td>
+                <td>@Html.ActionLink("Сhapters", "Chapters", "Chapter", routeValues: new { compositionId = item.Id }, new { @class = "btn btn-outline-secondary" })</td>
+            </tr>
         }
     </tbody>
 </table>
