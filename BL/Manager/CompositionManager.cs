@@ -130,7 +130,7 @@ namespace BL.Manager
 
         public async Task EditCompositionAsync(Composition composition, CancellationToken token)
         {
-            var compositionDb = await _context.Compositions.FindAsync(composition.Id, token);
+            var compositionDb = await _context.Compositions.FindAsync(new object[] { composition.Id }, token);
 
             if (compositionDb != null)
             {

@@ -1,6 +1,7 @@
 ﻿using BL.Manager.Interface;
 using DAL.Models;
 using FanFics.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace FanFics.Controllers
 {
-
+    [Authorize]
     public sealed class CompositionController : Controller
     {
         private readonly ILogger<CompositionController> _logger;
@@ -105,6 +106,7 @@ namespace FanFics.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult> Readonly(int? id, CancellationToken token)
         {
             var compositionViewModel = await GetCompositionViewModelAsync(id.Value, token);

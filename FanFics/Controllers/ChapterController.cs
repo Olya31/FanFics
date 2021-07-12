@@ -3,6 +3,7 @@ using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using DAL.Models;
 using FanFics.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace FanFics.Controllers
 {
- 
+    [Authorize]
     public sealed class ChapterController : Controller
     {
         private readonly ILogger<CompositionController> _logger;
@@ -113,7 +114,7 @@ namespace FanFics.Controllers
             {
                 await _chapterManager.DeleteChapterAsync(id.Value, token);
 
-                return RedirectToAction("Chapters", new { id = compositionId.Value });
+                return RedirectToAction("Chapters", new { compositionId = compositionId.Value });
             }
 
             return NotFound();
@@ -150,6 +151,7 @@ namespace FanFics.Controllers
             return await _photoManager.AddPhotoAsync(phote, cancellationToken);
         }
 
+        [AllowAnonymous]
         public async Task<ActionResult> Read(int? id, CancellationToken token)
         {
             if (id.HasValue)
