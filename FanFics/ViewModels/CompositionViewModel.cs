@@ -16,7 +16,7 @@ namespace FanFics.ViewModels
 
         public string Fandom { get; set; }
 
-        public DateTime DateUpDate { get; set; }
+        public DateTime DateUpdate { get; set; }
 
         public string Author { get; set; }  
         
@@ -24,7 +24,13 @@ namespace FanFics.ViewModels
 
         public List<Chapter> Chapters { get; set; }
 
-        public Composition ToComposition()
+        public string UserId { get; set; }
+
+        public bool IsFavorite { get; set; }
+
+        public List<Rating> Ratings { get; set; }
+
+        public Composition ToComposition(string userId)
         {
             return new Composition
             {
@@ -33,9 +39,26 @@ namespace FanFics.ViewModels
                 ShortDescription = this.ShortDescription,
                 DateAdded = this.DateAdded,
                 Fandom = this.Fandom,
-                DateUpDate = this.DateUpDate,
+                DateUpdate = this.DateUpdate,
                 Author = this.Author,
                 Tags = this.Tags,
+                UserId = userId,
+            };
+        }
+
+        public Composition ToComposition(CompositionViewModel composition)
+        {
+            return new Composition
+            {
+                Id = composition.Id,
+                TitleComposition = composition.TitleComposition,
+                ShortDescription = composition.ShortDescription,
+                DateAdded = composition.DateAdded,
+                Fandom = composition.Fandom,
+                DateUpdate = DateTime.Now,
+                Author = composition.Author,
+                Tags = composition.Tags,
+                UserId = composition.UserId,
             };
         }
 
@@ -53,13 +76,15 @@ namespace FanFics.ViewModels
                 ShortDescription = composition.ShortDescription,
                 DateAdded = composition.DateAdded,
                 Fandom = composition.Fandom,
-                DateUpDate = DateTime.Now,
+                DateUpdate = DateTime.Now,
                 Author = composition.Author,
                 Tags = composition.Tags,
-                Chapters = composition.Chapters
+                Chapters = composition.Chapters,
+                IsFavorite = false,
+                Ratings = composition.Rating,
+                UserId = composition.UserId,
             };
         }
-
         public IEnumerable<CompositionViewModel> ToCompositionViewModels(IEnumerable<Composition> compositions)
         {
             var result = new List<CompositionViewModel>();

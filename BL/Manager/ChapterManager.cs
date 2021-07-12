@@ -2,7 +2,6 @@
 using DAL;
 using DAL.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,41 +18,34 @@ namespace BL.Manager
 
         public async Task AddChapterAsync(Chapter chapter, CancellationToken token)
         {
-            await _context.Chapter.AddAsync(chapter, token);
+            await _context.Chapters.AddAsync(chapter, token);
 
             await _context.SaveChangesAsync(token);
         }
 
         public async Task DeleteChapterAsync(int id, CancellationToken token)
         {
-            var item = await _context.Chapter.FindAsync(new object[] { id }, token);
+            var item = await _context.Chapters.FindAsync(new object[] { id }, token);
 
             if (item != null)
             {
-                _context.Chapter.Remove(item);
+                _context.Chapters.Remove(item);
                 await _context.SaveChangesAsync(token);
             }
         }
 
-        public IEnumerable<Chapter> GetChapters()
-        {
-            var chapter = _context.Chapter.Include(c => c.Photo);
-
-            return chapter;
-        }
-
         public async Task<Chapter> GetChapterByIdAsync(int id, CancellationToken token)
         {
-            var chapter = await _context.Chapter
+            var chapter = await _context.Chapters
                 .Include(c => c.Photo)
                 .SingleOrDefaultAsync(c => c.Id == id, token);
 
             return chapter;
         }
 
-        public void Update(Chapter chapter)
+        public async Task UpdateAsync(Chapter chapter)
         {
-            var chapterDb = _context.Chapter.Find(chapter.Id);
+            var chapterDb = await _context.Chapters.FindAsync(chapter.Id);
 
             if (chapterDb != null)
             {
@@ -61,10 +53,9 @@ namespace BL.Manager
                 chapterDb.Text = chapter.Text;
                 chapterDb.PhotoId = chapter.PhotoId;
                 chapterDb.Photo = chapter.Photo;
-                _context.Chapter.Update(chapterDb);
-                _context.SaveChanges();
+                 _context.Chapters.Update(chapterDb);
+                await _context.SaveChangesAsync();
             }
         }
-
     }
 }

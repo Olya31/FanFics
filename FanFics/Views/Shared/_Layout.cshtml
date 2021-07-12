@@ -1,6 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Mvc.Localization
+
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 @inject IViewLocalizer Localizer
+
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
@@ -22,22 +24,21 @@
                 <div class="collapse navbar-collapse" id="navbarColor01">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link active" asp-area="" asp-controller="Home" asp-action="Index">@Localizer["TitleFanfiction"]</a>
+                            <a class="nav-link active" asp-area="" asp-controller="Fanfics" asp-action="Index">@Localizer["TitleFanfiction"]</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Index">@Localizer["TitleUsers"]</a>
-                        </li>
-                        @if (this.User.IsInRole("Administrator"))
-                        {
-                            
-                        }
                         @if (User.Identity.IsAuthenticated)
                         {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Favorite" asp-action="Index">@Localizer["Favorites"]</a>
+                            </li>
                             <li class="nav-item my-2 my-sm-0">
                                 <a class="nav-link" asp-area="" asp-controller="Profile" asp-action="Index">@Localizer["TitleProfile"]</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Logout">@Localizer["TitleLogout"]</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Settings" asp-action="Settings">@Localizer["TitleSettings"]</a>
                             </li>
                         }
                         else
@@ -48,11 +49,13 @@
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Login">@Localizer["TitleLogin"]</a>
                             </li>
-
                         }
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Settings" asp-action="Settings">@Localizer["TitleSettings"]</a>
-                        </li>
+                        @if (this.User.IsInRole("Administrator"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Index">@Localizer["TitleUsers"]</a>
+                            </li>
+                        }
                     </ul>
                     <form class="d-flex">
                         <input class="form-control me-sm-2" type="text" placeholder="@Localizer["TitleSearch"]">

@@ -4,7 +4,6 @@ using FanFics.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading;
@@ -12,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace FanFics.Controllers
 {
+
     public sealed class CompositionController : Controller
     {
         private readonly ILogger<CompositionController> _logger;
@@ -35,17 +35,18 @@ namespace FanFics.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View("Add");
+            var user = await GetCurrentUserAsync();
+            return View("Add", user);
         }
 
         [HttpPost]
-        public IActionResult Add(CompositionViewModel composition, CancellationToken token)
+        public IActionResult Add(CompositionViewModel composition, User user, CancellationToken token)
         {
-            _compositionManager.AddComposition(composition.ToComposition(), token);
+            _compositionManager.AddComposition(composition.ToComposition(user.Id), token);
 
-            return RedirectToAction("Index", "Profile");
+            return RedirectToAction("Index", "Profile", new { user = user });
         }
 
         [HttpGet]
@@ -55,7 +56,7 @@ namespace FanFics.Controllers
             {
                 await _compositionManager.DeleteCompositionAsync(id.Value, token);
 
-                return RedirectToAction("Index", "Profile", new { id = id});
+                return RedirectToAction("Index", "Profile", new { id = id });
             }
 
             return NotFound();
@@ -68,7 +69,6 @@ namespace FanFics.Controllers
 
             return Json(tagList);
         }
-
 
         [HttpGet]
         public async Task<IActionResult> Edit(int? id, CancellationToken token)
@@ -89,9 +89,9 @@ namespace FanFics.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(CompositionViewModel composition)
+        public async Task<IActionResult> Edit(CompositionViewModel composition, CancellationToken token)
         {
-            _compositionManager.EditComposition(composition.ToComposition());
+            await _compositionManager.EditCompositionAsync(composition.ToComposition(composition), token);
 
             return RedirectToAction("Index", "Profile");
         }
@@ -104,30 +104,13 @@ namespace FanFics.Controllers
             return RedirectToAction("Index", "Chapter", composition);
         }
 
-
-
         [HttpGet]
         public async Task<ActionResult> Readonly(int? id, CancellationToken token)
         {
-            //var user = await GetCurrentUserAsync();
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var compositionViewModels = new CompositionViewModel();
-            var composition = await _compositionManager.GetCompositionByIdAsync(id.Value, token);
-
-            if (composition == null)
-            {
-                return NotFound();
-            }
-
-            var compositionViewModel = compositionViewModels.ToCompositionViewModel(composition);
+            var compositionViewModel = await GetCompositionViewModelAsync(id.Value, token);
 
             var rating = new RatingViewModel();
-
-            rating.CompositionId = id.Value;          
+            rating.CompositionId = id.Value;
 
             var Comments = _ratingManager.GetComments(id);
             rating.ListOfComments = Comments;
@@ -147,10 +130,9 @@ namespace FanFics.Controllers
                 ViewBag.RatingCount = 0;
             }
 
-            var item = new ReadonlyViewModel();
-            item.Composition = compositionViewModel;
-            item.Rating = rating;
-            //item.User = user;
+            var user = await GetCurrentUserAsync();
+
+            var item = GetItemByRead(compositionViewModel, rating, user);
 
             return View("Readonly", item);
         }
@@ -162,17 +144,42 @@ namespace FanFics.Controllers
             var comment = ratings.Rating.Comments;
             var compositionId = ratings.Rating.CompositionId;
             var rating = ratings.Rating.RatingCounter;
+            var userId = ratings.User.Id;
 
-            await _ratingManager.AddRating(ratings.Rating.ToRating(comment, compositionId, rating), token);
+            await _ratingManager.AddRating(ratings.Rating.ToRating(comment, compositionId, rating, userId), token);
 
             return RedirectToAction("Readonly", new { id = compositionId });
         }
 
-        //private async Task<User> GetCurrentUserAsync()
-        //{
-        //    var currentUser = this.User;
-        //    var currentUserName = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
-        //    return await _userManager.FindByIdAsync(currentUserName);
-        //}
+        private async Task<User> GetCurrentUserAsync()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                var currentUser = this.User;
+                var currentUserName = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+                return await _userManager.FindByIdAsync(currentUserName);
+            }
+            return null;
+        }
+
+        public async Task<CompositionViewModel> GetCompositionViewModelAsync(int? id, CancellationToken token)
+        {
+            var compositionViewModels = new CompositionViewModel();
+            var composition = await _compositionManager.GetCompositionByIdAsync(id.Value, token);
+            return compositionViewModels.ToCompositionViewModel(composition);
+        }
+
+        public ReadonlyViewModel GetItemByRead(
+            CompositionViewModel compositionViewModel,
+            RatingViewModel rating,
+            User user)
+        {
+            return new ReadonlyViewModel
+            {
+                Composition = compositionViewModel,
+                Rating = rating,
+                User = user
+            };
+        }
     }
 }

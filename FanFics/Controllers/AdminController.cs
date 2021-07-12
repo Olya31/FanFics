@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace FanFics.Controllers
 {
-    //[Authorize(Roles = "Administrator")]
+    [Authorize(Roles = "Administrator")]
     public sealed class AdminController : Controller
     {
         private readonly UserManager<User> _userManager;
@@ -129,16 +129,10 @@ namespace FanFics.Controllers
             {
                 return NotFound();
             }
-            UserViewModel model = new UserViewModel
-            {
-                Id = user.Id,
-                Email = user.Email,
-                FullName = user.FullName,
-                NickName = user.NickName,
-                BirthDay = user.BirthDay
-            };
+            var users = new UserViewModel();
+            var userViewModel = users.ToUserViewModel(user);
 
-            return RedirectToAction("Index", "Profile", model);
+            return RedirectToAction("Index", "Profile", userViewModel);
         }
 
         private async Task UnLockProcessingAsync(IEnumerable<Guid> selectedObjects)

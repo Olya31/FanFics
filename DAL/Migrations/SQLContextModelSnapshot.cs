@@ -60,7 +60,7 @@ namespace DAL.Migrations
                     b.HasIndex("PhotoId")
                         .IsUnique();
 
-                    b.ToTable("Chapter");
+                    b.ToTable("Chapters");
                 });
 
             modelBuilder.Entity("DAL.Models.Composition", b =>
@@ -76,7 +76,7 @@ namespace DAL.Migrations
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("DateUpDate")
+                    b.Property<DateTime>("DateUpdate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Fandom")
@@ -88,9 +88,36 @@ namespace DAL.Migrations
                     b.Property<string>("TitleComposition")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Composition");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Compositions");
+                });
+
+            modelBuilder.Entity("DAL.Models.Favorite", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CompositionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompositionId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Favorites");
                 });
 
             modelBuilder.Entity("DAL.Models.Photo", b =>
@@ -154,17 +181,14 @@ namespace DAL.Migrations
                     b.Property<DateTime>("ThisDateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId1")
+                    b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CompositionId");
 
-                    b.HasIndex("UserId1");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Rating");
                 });
@@ -426,6 +450,32 @@ namespace DAL.Migrations
                     b.Navigation("Photo");
                 });
 
+            modelBuilder.Entity("DAL.Models.Composition", b =>
+                {
+                    b.HasOne("DAL.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DAL.Models.Favorite", b =>
+                {
+                    b.HasOne("DAL.Models.Composition", "Composition")
+                        .WithMany("Favorite")
+                        .HasForeignKey("CompositionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DAL.Models.User", "User")
+                        .WithMany("Favorite")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Composition");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("DAL.Models.Rating", b =>
                 {
                     b.HasOne("DAL.Models.Composition", "Composition")
@@ -436,7 +486,7 @@ namespace DAL.Migrations
 
                     b.HasOne("DAL.Models.User", "User")
                         .WithMany("Rating")
-                        .HasForeignKey("UserId1");
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Composition");
 
@@ -498,6 +548,8 @@ namespace DAL.Migrations
                 {
                     b.Navigation("Chapters");
 
+                    b.Navigation("Favorite");
+
                     b.Navigation("Rating");
                 });
 
@@ -508,6 +560,8 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Models.User", b =>
                 {
+                    b.Navigation("Favorite");
+
                     b.Navigation("Rating");
                 });
 #pragma warning restore 612, 618

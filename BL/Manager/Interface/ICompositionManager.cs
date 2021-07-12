@@ -13,14 +13,16 @@ namespace BL.Manager.Interface
 
         IEnumerable<Composition> GetCompositions();
 
-        List<Composition> Filter(string title);
+        Task<IList<Composition>> FilterAsync(string title, string userId, CancellationToken token);
 
-        List<Composition> Sort(string sortOrder);
+        List<Composition> Sort(string sortOrder, string userId);
 
         Task<Composition> GetCompositionByIdAsync(int id, CancellationToken token);
 
-        void EditComposition(Composition composition);
+        Task EditCompositionAsync(Composition composition, CancellationToken token);
 
-        //void Update(Composition composition);
+        Task<IList<Composition>> GetToMainPageAsync(CancellationToken token);
+
+        Task<IEnumerable<Composition>> GetCompositionsByUser(string userId, CancellationToken token);
     }
 }

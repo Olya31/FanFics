@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace FanFics.Controllers
 {
+ 
     public sealed class ChapterController : Controller
     {
         private readonly ILogger<CompositionController> _logger;
@@ -44,20 +45,17 @@ namespace FanFics.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int? id, CancellationToken token)
         {
-
             if (id.HasValue)
             {
                 var chapterViewModels = new ChapterViewModel();
-
                 var chapter = await _chapterManager.GetChapterByIdAsync(id.Value, token);
-
                 var chapterViewModel = chapterViewModels.ToChapterViewModel(chapter);
 
                 return View("edit", chapterViewModel);
             }
             else
             {
-                return View("Chapters");
+                return NotFound();
             }
         }
 
@@ -69,31 +67,32 @@ namespace FanFics.Controllers
             {
                 await _photoManager.DeleteAsync(chapter.PhotoId, token);
                 var photo = await _photoManager.GetPhotoAsync(photoId.Value, token);
-                _chapterManager.Update(chapter.ToChapter(photo));
+                await _chapterManager.UpdateAsync(chapter.ToChapter(photo));
             }
             else
             {
                 var photo = await _photoManager.GetPhotoAsync(chapter.PhotoId, token);
-                _chapterManager.Update(chapter.ToChapter(photo));
+                await _chapterManager.UpdateAsync(chapter.ToChapter(photo));
             }
 
-            return RedirectToAction("Chapters", new { compositionId = chapter.CompositionId});
+            return RedirectToAction("Chapters", new { compositionId = chapter.CompositionId });
         }
 
         [HttpGet]
         public async Task<ActionResult> Chapters(int? compositionId, CancellationToken token)
         {
-            var composition = await _compositionManager.GetCompositionByIdAsync(compositionId.Value, token);
+            if (compositionId.HasValue)
+            {
+                var chapterViewModels = new ChapterViewModel();
+                var composition = await _compositionManager.GetCompositionByIdAsync(compositionId.Value, token);
+                var chapters = composition.Chapters;
+                var chapterViewModel = chapterViewModels.ToChapterViewModels(chapters);
 
-            var chapterViewModels = new ChapterViewModel();
+                return View("Chapters", chapterViewModel);
+            }
+            return NotFound();
 
-            var chapters = composition.Chapters;
-
-            var chapterViewModel = chapterViewModels.ToChapterViewModels(chapters);
-
-            return View("Chapters", chapterViewModel);
         }
-
 
         [HttpPost]
         public async Task<IActionResult> Add(
@@ -101,7 +100,6 @@ namespace FanFics.Controllers
             CancellationToken token)
         {
             var photoId = await UploadPhotoAsync(chapter.Image, token);
-
             var model = chapter.ToChapter(photoId ?? 0);
             await _chapterManager.AddChapterAsync(model, token);
 
@@ -152,12 +150,19 @@ namespace FanFics.Controllers
             return await _photoManager.AddPhotoAsync(phote, cancellationToken);
         }
 
-        public async Task<ActionResult> Read(int?  id,  CancellationToken token /*int page = 1*/)
-        { 
-            var chapterViewModels = new ChapterViewModel();
-            var chapter = await _chapterManager.GetChapterByIdAsync(id.Value, token);
-            var chapterViewModel = chapterViewModels.ToChapterViewModel(chapter);
-            return View("Read", chapterViewModel);
+        public async Task<ActionResult> Read(int? id, CancellationToken token)
+        {
+            if (id.HasValue)
+            {
+                var chapterViewModels = new ChapterViewModel();
+                var chapter = await _chapterManager.GetChapterByIdAsync(id.Value, token);
+                var chapterViewModel = chapterViewModels.ToChapterViewModel(chapter);
+
+                return View("Read", chapterViewModel);
+            }
+
+            return NotFound();
+
         }
     }
 }

@@ -15,5 +15,7 @@ namespace DAL.Models
         public bool IsLock { get; set; }
 
         public List<Rating> Rating { get; set; } = new List<Rating>();
+
+        public List<Favorite> Favorite { get; set; } = new List<Favorite>();
     }
 }

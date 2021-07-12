@@ -15,7 +15,7 @@ namespace DAL.Models
 
         public string Fandom { get; set; }
 
-        public DateTime DateUpDate { get; set; }
+        public DateTime DateUpdate { get; set; }
 
         public List<Tags> Tags { get; set; } = new List<Tags>();
 
@@ -23,6 +23,12 @@ namespace DAL.Models
 
         public List<Rating> Rating { get; set; } = new List<Rating>();
 
+        public List<Favorite> Favorite { get; set; } = new List<Favorite>();
+
         public string Author { get; set; }
+
+        public string UserId { get; set; }
+
+        public User User { get; set; }
     }
 }

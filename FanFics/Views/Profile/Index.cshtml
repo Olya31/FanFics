@@ -1,65 +1,73 @@
 ﻿@using Microsoft.AspNetCore.Mvc.Localization
 @using CloudinaryDotNet;
+
 @inject IViewLocalizer Localizer
 @inject Cloudinary Cloudinary
 
 @model FanFics.ViewModels.ProfileViewModel
 
 @{
-    ViewBag.Title = "Profile";
+    ViewBag.Title = @Localizer["Profile"];
 }
+
+<link href="~/css/profile.css" rel="stylesheet" />
 <br />
-<h2>Profile</h2>
+<h2>@Localizer["Profile"]</h2>
 <br />
 <div class="row justify-content-around">
     <div class="col-2">
-        <div id="logo" style="height:30px; width:30px;">
-            <!-- This will render the image fetched from a remote HTTP URL using Cloudinary -->
-            @Html.Raw(Cloudinary.Api.UrlImgUp.Signed(true).Secure().Action("fetch").BuildImageTag("https://res.cloudinary.com/dzlq0fj8z/image/upload/v1625580810/ts0qhf3wqn0n3w8ygirk.png"))
+        <div id="logo">
+            @Html.Raw(Cloudinary.Api.UrlImgUp.Signed(true).Secure().Action("fetch").BuildImageTag("https://res.cloudinary.com/dzlq0fj8z/image/upload/v1625767129/npwbqqvdc6snjqyepfe1.png"))
         </div>
     </div>
     <div class="card text-white bg-secondary mb-3 col-2" style="width: 39rem; height: 15rem;">
-        <div class="card-header">Your data</div>
+        <div class="card-header">@Localizer["Data"]</div>
         <div class="card-body">
             <div class="form-group row">
-                <label for="email" class="col-sm-2 col-form-label">Email</label>
-                <div class="col-sm-10">
+                <label for="email" class="col col-form-label">@Localizer["Email"]</label>
+                <div class="col">
                     <p class="">@Model.User.Email</p>
                 </div>
             </div>
             <div class="form-group row">
-                <label for="nickname" class="col-sm-2 col-form-label">Nickname</label>
-                <div class="col-sm-10">
+                <label for="nickname" class="col col-form-label">@Localizer["Nickname"]</label>
+                <div class="col">
                     <p class="editable-text">@Model.User.NickName</p>
                 </div>
             </div>
             <div class="form-group row">
-                <label for="fullName" class="col-sm-2 col-form-label">Full name</label>
-                <div class="col-sm-10">
+                <label for="fullName" class="col col-form-label">@Localizer["FullName"]</label>
+                <div class="col">
                     <p class="editable-text-fullname">@Model.User.FullName</p>
                 </div>
             </div>
             <div class="form-group row">
-                <label for="birthday" class="col-sm-2 col-form-label">Birthday</label>
-                <div class="col-sm-10">
+                <label for="birthday" class="col col-form-label">@Localizer["Birthday"]</label>
+                <div class="col">
                     <p class="datepicker">@Model.User.BirthDay.ToShortDateString()</p>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 <br />
-<h2 style="text-align:center">List compositions</h2>
+<h2 style="text-align:center">@Localizer["ListCompositions"]</h2>
 <br />
-@using (Html.BeginForm("Index", "Profile", FormMethod.Get))
-{
-    <p class="lead">
-        Find by title: @Html.TextBox("TitleComposition", ViewBag.CurrentFilter as string)
-        <input class="btn btn-secondary" type="submit" value="Search" />
-    </p>
-}
-@Html.ActionLink("Add", "Edit", "Profile", routeValues: null, new { @class = "btn btn-secondary mb-0" })
+<div class="row ">
+    <div class="col">
+        @using (Html.BeginForm("Index", "Profile", FormMethod.Get))
+        {
+        <p class="lead">
+            @Localizer["Find"]: @Html.TextBox("TitleComposition", ViewBag.CurrentFilter as string)
+            <input class="btn btn-secondary" type="submit" value="Search" />
+        </p>
+        }
+    </div>
+    <div class="col">
+        @Html.ActionLink("Add", "Index", "Composition", routeValues: null, new { @class = "btn btn-secondary" })
+        @Html.ActionLink("Add new tag", "Index", "Tags", routeValues: null, new { @class = "btn btn-secondary" })
+    </div>
+</div>
 <table class="table table-hover">
     <thead>
         <tr>
@@ -70,7 +78,7 @@
             <th scope="col">
                 @Html.ActionLink("Fandom", "Index", new { sortOrder = ViewBag.FandomSortParm })
             </th>
-            <th scope="col">Short Description</th>
+            <th scope="col">@Localizer["ShortDescription"]</th>
             <th scope="col">
                 @Html.ActionLink("Date added", "Index", new { sortOrder = ViewBag.DateSortParm })
             </th>
@@ -81,10 +89,11 @@
         </tr>
     </thead>
     <tbody>
+        @{ int rowNo = 0; }
         @foreach (var item in Model.Compositions)
         {
             <tr class="table-light">
-                <td>@item.Id</td>
+                <td>@(rowNo += 1)</td>
                 <td>@item.TitleComposition</td>
                 <td>@item.Fandom</td>
                 <td>@item.ShortDescription</td>
@@ -102,10 +111,3 @@
 <script src="~/lib/jquery.jeditable/jquery.jeditable.autogrow.js"></script>
 <script src="~/lib/jquery.jeditable/jquery.jeditable.datepicker.js"></script>
 <script src="~/js/profile.js"></script>
-
-<style>
-    img {
-        height: 230px;
-        width: 230px;
-    }
-</style>

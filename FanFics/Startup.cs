@@ -29,7 +29,6 @@ namespace FanFics
 
         public IConfiguration Configuration { get; }    
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<SQLContext>(options =>
@@ -71,6 +70,7 @@ namespace FanFics
             services.AddScoped<IPhotoManager, PhotoManager>();
             services.AddScoped<ITagsManager, TagsManager>();
             services.AddScoped<IRatingManager, RatingManager>();
+            services.AddScoped<IFavoriteManager, FavoriteManager>();
 
             services.AddLocalization(options => options.ResourcesPath = "Resources");
 
@@ -107,7 +107,7 @@ namespace FanFics
             services.AddControllersWithViews();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider service)
         {
             if (env.IsDevelopment())
@@ -116,8 +116,7 @@ namespace FanFics
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseExceptionHandler("/Home/Error");                
                 app.UseHsts();
                
             }
@@ -136,24 +135,21 @@ namespace FanFics
               
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Fanfics}/{action=Index}/{id?}");
             });
 
-            //CreateUserRoles(service).Wait();
+            CreateUserRoles(service).Wait();
         }
 
         private async Task CreateUserRoles(IServiceProvider serviceProvider)
         {
             var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var UserManager = serviceProvider.GetRequiredService<UserManager<User>>();
-
-            IdentityResult roleResult;
             
             var roleCheck = await RoleManager.RoleExistsAsync("Administrator");
             if (!roleCheck)
-            {
-                //create the roles and seed them to the database
-                roleResult = await RoleManager.CreateAsync(new IdentityRole("Administrator"));
+            {                
+                await RoleManager.CreateAsync(new IdentityRole("Administrator"));
             }
           
             var user = await UserManager.FindByEmailAsync("rudko2002olga@gmail.com");            

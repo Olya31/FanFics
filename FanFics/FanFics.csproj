@@ -29,10 +29,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\Bookmarks\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="wwwroot\image\StarFade.gif" />
     <None Include="wwwroot\image\StarGlow.gif" />
   </ItemGroup>

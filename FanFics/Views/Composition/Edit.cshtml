@@ -1,15 +1,22 @@
-﻿@model FanFics.ViewModels.CompositionViewModel
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer Localizer
+
+@model FanFics.ViewModels.CompositionViewModel
+
 @{
-    ViewBag.Title = "Edit composition";
+    ViewBag.Title = @Localizer["EditСomposition"];
 }
+
+<link href="~/css/composition.css" rel="stylesheet" />
 <br />
-<h2 style="text-align:center">Edit "@Model.TitleComposition" composition</h2>
+<h2 style="text-align:center">@Localizer["Edit"] "@Model.TitleComposition" @Localizer["Сomposition"]</h2>
 <br />
 <form asp-action="Edit" asp-controller="Composition">
     <div class="card text-white bg-secondary mb-3">
         <div class="card-body">
             <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Author</label>
+                <label class="col-sm-2 col-form-label">@Localizer["Author"]</label>
                 <div class="col-sm-10">
                     <input type="text" name="Author" value="@Model.Author" class="form-control" id="author" placeholder="Enter author">
                 </div>
@@ -17,7 +24,7 @@
         </div>
         <div class="card-body">
             <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Title composition</label>
+                <label class="col-sm-2 col-form-label">@Localizer["Title"]</label>
                 <div class="col-sm-10">
                     <input type="text" name="TitleComposition" value="@Model.TitleComposition." class="form-control" id="titleComposition" placeholder="Enter title composition">
                 </div>
@@ -25,7 +32,7 @@
         </div>
         <div class="card-body">
             <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Short Description</label>
+                <label class="col-sm-2 col-form-label">@Localizer["ShortDescription"]</label>
                 <div class="col-sm-10">
                     <textarea rows="15" name="ShortDescription" class="form-control">@Model.ShortDescription</textarea>
                 </div>
@@ -33,7 +40,7 @@
         </div>
         <div class="card-body">
             <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Fandom</label>
+                <label class="col-sm-2 col-form-label">@Localizer["Fandom"]</label>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" id="fandom" value="@Model.Fandom" name="Fandom" placeholder="Enter fandom">
                 </div>
@@ -41,7 +48,7 @@
         </div>
         <div class="card-body">
             <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Tags</label>
+                <label class="col-sm-2 col-form-label">@Localizer["Tags"]</label>
                 <div class="col-sm-10">
                     <div class="frmSearch">
                         <div id="tags">
@@ -62,74 +69,17 @@
         </div>
         <div class="card-body">
             <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Chapter</label>
-                <div class="col-sm-10">                   
+                <label class="col-sm-2 col-form-label">@Localizer["Chapters"]</label>
+                <div class="col-sm-10">
                     @Html.ActionLink("Add chapter", "ChapterAdd", "Composition", routeValues: new { id = Model.Id }, new { @class = "btn btn-secondary" })
                 </div>
             </div>
         </div>
-        <button type="submit" class="btn btn-secondary">Edit</button>
+        <button type="submit" class="btn btn-secondary">@Localizer["Edit"]</button>
     </div>
 </form>
+@Html.ActionLink("Back", "Index", "Profile", routeValues: null, new { @class = "btn btn-secondary" })
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script type="text/javascript" src="~/js/composition.js"></script>
-<style>
-    .ui-autocomplete {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        z-index: 1000;
-        float: left;
-        display: none;
-        min-width: 160px;
-        padding: 4px 0;
-        margin: 0 0 10px 25px;
-        list-style: none;
-        background-color: #ffffff;
-        border-color: #ccc;
-        border-color: rgba(0, 0, 0, 0.2);
-        border-style: solid;
-        border-width: 1px;
-        -webkit-border-radius: 5px;
-        -moz-border-radius: 5px;
-        border-radius: 5px;
-        -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-        -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-        -webkit-background-clip: padding-box;
-        -moz-background-clip: padding;
-        background-clip: padding-box;
-        *border-right-width: 2px;
-        *border-bottom-width: 2px;
-    }
-
-    .ui-menu-item > a.ui-corner-all {
-        display: block;
-        padding: 3px 15px;
-        clear: both;
-        font-weight: normal;
-        line-height: 18px;
-        color: #000;
-        white-space: nowrap;
-        text-decoration: none;
-    }
-
-    .ui-menu-item > div {
-        color: #000;
-    }
-
-    .ui-helper-hidden-accessible {
-        display: none;
-    }
-
-    .ui-state-hover, .ui-state-active {
-        color: #ffffff;
-        text-decoration: none;
-        background-color: #0088cc;
-        border-radius: 0px;
-        -webkit-border-radius: 0px;
-        -moz-border-radius: 0px;
-        background-image: none;
-    }
-</style>

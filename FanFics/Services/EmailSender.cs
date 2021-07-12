@@ -70,8 +70,7 @@ namespace FanFics.Services
                     client.Send(mailMessage);
                 }
                 catch
-                {
-                    //log an error message or throw an exception, or both.
+                {                    
                     throw;
                 }
                 finally
@@ -95,8 +94,7 @@ namespace FanFics.Services
                     await client.SendAsync(mailMessage);
                 }
                 catch
-                {
-                    //log an error message or throw an exception, or both.
+                {                    
                     throw;
                 }
                 finally

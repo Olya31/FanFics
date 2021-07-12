@@ -12,15 +12,17 @@ namespace DAL
             //Database.EnsureCreated();
         }
 
-        public DbSet<Chapter> Chapter { get; set; }
+        public DbSet<Chapter> Chapters { get; set; }
 
-        public DbSet<Composition> Composition { get; set; }
+        public DbSet<Composition> Compositions { get; set; }
 
         public DbSet<Rating> Rating { get; set; }
 
         public DbSet<Tags> Tags { get; set; }
 
         public DbSet<Photo> Photos { get; set; }
+
+        public DbSet<Favorite> Favorites { get; set; }
 
     }
 }

@@ -117,7 +117,7 @@ namespace FanFics.Controllers
                     }
                     else
                     {
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Index", "Fanfics");
                     }
                 }
                 else

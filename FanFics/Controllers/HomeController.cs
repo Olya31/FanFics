@@ -1,6 +1,5 @@
 ﻿using BL.Manager.Interface;
 using FanFics.Models;
-using FanFics.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -20,12 +19,7 @@ namespace FanFics.Controllers
         }
 
         public IActionResult Index()
-        {
-            //var chapterViewModels = new ChapterViewModel();
-
-            //var chapters =  _chapterManager.GetChapters();
-            //var chapterViewModel = chapterViewModels.ToChapterViewModels(chapters);
-
+        { 
             return View();
         }
 

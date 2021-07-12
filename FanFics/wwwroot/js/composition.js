@@ -26,6 +26,32 @@
     });
 
 
+$(function () {
+    SCRate();
+});
+
+$("#favorite").click(function () {
+
+    var compositionId = $("#compositionId").val();
+    var userId = $("#userId").val();
+
+    $.ajax({
+        url: "/Favorite/AddFavorite",
+        type: "POST",
+        data: { compositionId: compositionId, userId: userId },
+        success: function (response) {
+            if (response == true) {
+                console.log("Good");
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.log(textStatus, errorThrown);
+        }
+    });
+
+});
+
+
 
 
 

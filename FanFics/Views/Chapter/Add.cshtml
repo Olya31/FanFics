@@ -1,18 +1,23 @@
 ﻿@using CloudinaryDotNet;
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer Localizer
 @inject Cloudinary Cloudinary
+
 @model FanFics.ViewModels.ChapterViewModel
 @{
-    ViewBag.Title = "Add new chapter";
+    ViewBag.Title = @Localizer["Add"];
 }
+
 <br />
-<h2 style="text-align:center">Add a new chapter</h2>
+<h2 style="text-align:center">@Localizer["Add"]</h2>
 <br />
 <form asp-action="Add" asp-controller="Chapter" enctype="multipart/form-data">
     <input type="hidden" value="@ViewBag.Composition" name="CompositionId" />
     <div class="card text-white bg-secondary mb-3">
         <div class="card-body">
             <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Title</label>
+                <label class="col-sm-2 col-form-label">@Localizer["Title"]</label>
                 <div class="col-sm-10">
                     <input type="text" name="Title" value="" class="form-control" placeholder="Enter title">
                 </div>
@@ -20,7 +25,7 @@
         </div>
         <div class="card-body">
             <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Text</label>
+                <label class="col-sm-2 col-form-label">@Localizer["Text"]</label>
                 <div class="col-sm-10">
                     <textarea class="form-control" value="" name="Text" rows="5"></textarea>
                 </div>
@@ -28,7 +33,7 @@
         </div>
         <div class="card-body">
             <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Add image</label>
+                <label class="col-sm-2 col-form-label">@Localizer["AddImage"]</label>
                 <div class="col-sm-10">
                     <div class="photos">
                         <input type="file" name="image" multiple accept="image/gif, image/jpeg, image/png">
@@ -36,7 +41,8 @@
                 </div>
             </div>
         </div>
-        <button type="submit" class="btn btn-secondary" >Add</button>
+        <button type="submit" class="btn btn-secondary">@Localizer["AddChapter"]</button>
     </div>
 </form>
+@Html.ActionLink("Back", "Index", "Profile", routeValues: null, new { @class = "btn btn-secondary" })
 

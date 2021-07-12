@@ -25,13 +25,6 @@ namespace BL.Manager
             return photo.Id;
         }
 
-        //public async Task<int> GetPhotodAsync(int photoId, CancellationToken cancellationToken)
-        //{
-        //    var photo = await _context.Photos.Find(new object[] { photoId }, cancellationToken);
-
-        //    return photo.Id;
-        //}
-
         public async Task DeleteAsync(int id, CancellationToken token)
         {
             var photo = await _context.Photos.FindAsync(new object[] { id }, token);
@@ -50,6 +43,5 @@ namespace BL.Manager
 
             return photo;
         }
-
     }
 }

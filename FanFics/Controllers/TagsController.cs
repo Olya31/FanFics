@@ -1,5 +1,6 @@
 ﻿using BL.Manager.Interface;
 using FanFics.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace FanFics.Controllers
 {
+    [Authorize]
     public sealed class TagsController : Controller
     {
         private readonly ILogger<TagsController> _logger;
@@ -20,11 +22,16 @@ namespace FanFics.Controllers
             _tagsManager = tagsManager;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Post(TagsViewModel tags, CancellationToken token)
+        [HttpGet]
+        public ActionResult Index()
         {
-            await _tagsManager.AddTagAsync(tags.ToTag(), token);
+            return View("AddTags");
+        }
 
+        [HttpPost]
+        public async Task<ActionResult> AddTag(TagsViewModel tag, CancellationToken token)
+        {
+            await _tagsManager.AddTagAsync(tag.ToTag(), token);
             return RedirectToAction("Index", "Profile");
         }
     }

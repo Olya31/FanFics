@@ -21,44 +21,53 @@ namespace BL.Manager
 
         public async Task AddComposition(Composition composition, CancellationToken token)
         {
-           await _context.Composition.AddAsync(composition, token);
+            await _context.Compositions.AddAsync(composition, token);
 
             _context.SaveChanges();
         }
 
         public async Task DeleteCompositionAsync(int id, CancellationToken token)
         {
-            var item = await _context.Composition.FindAsync(new object[] { id }, token);
+            var item = await _context.Compositions.FindAsync(new object[] { id }, token);
 
             if (item != null)
             {
-                _context.Composition.Remove(item);
+                _context.Compositions.Remove(item);
                 await _context.SaveChangesAsync(token);
             }
         }
         public IEnumerable<Composition> GetCompositions()
         {
-            var composition = _context.Composition;
+            return _context.Compositions;
+        }
 
-            return composition;
+        public async Task<IEnumerable<Composition>> GetCompositionsByUser(string userId, CancellationToken token)
+        {
+            return await _context.Compositions
+                .Include(c => c.User)
+                .Where(c => c.UserId == userId)
+                .ToListAsync(token); 
         }
 
         public IEnumerable<Tags> GetTagsSearch(string Prefix)
         {
-            var compositions = _context.Tags.ToList().Where(c => c.TagName.StartsWith(Prefix)).Select(x => new Tags
+            return _context.Tags
+                .ToList()
+                .Where(c => c.TagName.StartsWith(Prefix))
+                .Select(x => new Tags
             {
                 Id = x.Id,
                 TagName = x.TagName
             }).ToList();
-
-            return compositions;
         }
 
-        public List<Composition> Sort(string sortOrder)
+        public List<Composition> Sort(string sortOrder, string userId)
         {
-            if(sortOrder != null)
+            if (sortOrder != null)
             {
-                IQueryable<Composition> composition = _context.Composition;
+                IQueryable<Composition> composition = _context.Compositions
+                    .Include(c => c.User)
+                    .Where(c => c.UserId == userId);
 
                 switch (sortOrder)
                 {
@@ -83,55 +92,58 @@ namespace BL.Manager
                 }
 
                 return composition.AsNoTracking().ToList();
-                
+
             }
 
             return null;
         }
 
-        public List<Composition> Filter(string title)
+        public async Task<IList<Composition>> GetToMainPageAsync(CancellationToken token)
         {
-            if(title != null)
-            {
-                IQueryable<Composition> composition = _context.Composition;
-              
-                if (!String.IsNullOrEmpty(title))
-                {
-                    composition = composition.Where(p => p.TitleComposition.Contains(title));
-                }
+            return await _context.Compositions
+                .Include(c => c.Rating)
+                .OrderByDescending(c => c.DateUpdate)
+                .ThenByDescending(c => c.Rating.Average(c => c.RatingCounter))
+                .ToListAsync(token);
+        }
 
-                return composition.AsNoTracking().ToList();
-                
+        public async Task<IList<Composition>> FilterAsync(string title, string userId, CancellationToken token)
+        {
+            if (title != null && !String.IsNullOrEmpty(title))
+            {
+                return await _context.Compositions
+                    .Where(c => c.UserId == userId)
+                    .Where(p => p.TitleComposition.Contains(title))
+                    .ToListAsync(token);
             }
+
             return null;
         }
 
         public async Task<Composition> GetCompositionByIdAsync(int id, CancellationToken token)
         {
-            var composition = await _context.Composition
+            return await _context.Compositions
                 .Include(c => c.Tags)
                 .Include(c => c.Chapters)
                 .SingleOrDefaultAsync(c => c.Id == id, token);
-
-            return composition;
         }
 
-        public void EditComposition(Composition composition)
+        public async Task EditCompositionAsync(Composition composition, CancellationToken token)
         {
-            var compositionDb = _context.Composition.Find(composition.Id);
+            var compositionDb = await _context.Compositions.FindAsync(composition.Id, token);
 
             if (compositionDb != null)
             {
                 compositionDb.Author = composition.Author;
                 compositionDb.DateAdded = composition.DateAdded;
-                compositionDb.DateUpDate = DateTime.Now;
+                compositionDb.DateUpdate = DateTime.Now;
                 compositionDb.Fandom = composition.Fandom;
                 compositionDb.TitleComposition = composition.TitleComposition;
                 compositionDb.ShortDescription = composition.ShortDescription;
                 compositionDb.Tags = composition.Tags;
                 compositionDb.Chapters = composition.Chapters;
-                _context.Composition.Update(compositionDb);
-                _context.SaveChanges();
+                _context.Compositions.Update(compositionDb);
+                await _context.SaveChangesAsync(token);
             }
         }
     }

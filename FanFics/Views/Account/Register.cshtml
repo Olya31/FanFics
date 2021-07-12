@@ -1,47 +1,51 @@
 ﻿@using Microsoft.AspNetCore.Mvc.Localization
+
 @inject IViewLocalizer Localizer
+
 @model FanFics.ViewModels.RegisterViewModel
-   <br >
+
+<br>
 <h2>@Localizer["Title"]</h2>
-<form method="post" asp-controller="Account" asp-action="Register">
-    <div asp-validation-summary="ModelOnly"></div>
-    <div>
-        <label asp-for="Email">@Localizer["Email"]</label><br />
-        <input asp-for="Email" />
-        <span asp-validation-for="Email"></span>
-    </div>
-    <br />
-    <div>
-        <label asp-for="NickName">@Localizer["NickName"]</label><br />
-        <input asp-for="NickName" />
-        <span asp-validation-for="NickName"></span>
-    </div>
-    <br />
-    <div>
-        <label asp-for="FullName">@Localizer["FullName"]</label><br />
-        <input asp-for="FullName" />
-        <span asp-validation-for="FullName"></span>
-    </div>
-    <br />
-    <div>
-        <label asp-for="BirthDay">@Localizer["BirthDay"]</label><br />
-        <input type="date" asp-for="BirthDay"/>
-        <span asp-validation-for="BirthDay"></span>
-    </div>
-    <br />
-    <div>
-        <label asp-for="Password">@Localizer["Password"]</label><br />
-        <input asp-for="Password" />
-        <span asp-validation-for="Password"></span>
-    </div>
-    <br />
-    <div>
-        <label asp-for="PasswordConfirm">@Localizer["PasswordConfirm"]</label><br />
-        <input asp-for="PasswordConfirm" />
-        <span asp-validation-for="PasswordConfirm"></span>
-    </div>
-    <br />
-    <div>
-        <input type="submit" class="btn btn-secondary my-2 my-sm-0" value="@Localizer["Register"]" />
-    </div>
+
+<form method="post" asp-controller="Account" asp-action="Register">  
+        <div asp-validation-summary="ModelOnly"></div>
+        <div>
+            <label asp-for="Email">@Localizer["Email"]</label><br />
+            <input asp-for="Email" />
+            <span asp-validation-for="Email"></span>
+        </div>
+        <br />
+        <div>
+            <label asp-for="NickName">@Localizer["NickName"]</label><br />
+            <input asp-for="NickName" />
+            <span asp-validation-for="NickName"></span>
+        </div>
+        <br />
+        <div>
+            <label asp-for="FullName">@Localizer["FullName"]</label><br />
+            <input asp-for="FullName" />
+            <span asp-validation-for="FullName"></span>
+        </div>
+        <br />
+        <div>
+            <label asp-for="BirthDay">@Localizer["BirthDay"]</label><br />
+            <input type="date" asp-for="BirthDay" />
+            <span asp-validation-for="BirthDay"></span>
+        </div>
+        <br />
+        <div>
+            <label asp-for="Password">@Localizer["Password"]</label><br />
+            <input asp-for="Password" />
+            <span asp-validation-for="Password"></span>
+        </div>
+        <br />
+        <div>
+            <label asp-for="PasswordConfirm">@Localizer["PasswordConfirm"]</label><br />
+            <input asp-for="PasswordConfirm" />
+            <span asp-validation-for="PasswordConfirm"></span>
+        </div>
+        <br />
+        <div>
+            <input type="submit" class="btn btn-secondary my-2 my-sm-0" value="@Localizer["Register"]" />
+        </div>
 </form>

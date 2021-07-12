@@ -84,10 +84,8 @@ body {
     white-space:normal;
 }
 
-input,
-select,
 textarea{
-    max-width: 280px;
+    width:100%;
 }
 
 .commentBox{
@@ -121,6 +119,36 @@ textarea{
 
 .starGlowN {
     background-image: url('/image/StarGlow.gif');
+    min-width: 30px;
+    min-height: 30px;
+    display: inline-block;
+}
+
+.headDark {
+    background-image: url('/image/heartDark.png');
+    min-width: 30px;
+    min-height: 30px;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.headDarkN {
+    background-image: url('/image/heartDark.png');
+    min-width: 30px;
+    min-height: 30px;
+    display: inline-block;
+}
+
+.hear {
+    background-image: url('/image/heart.png');
+    min-width: 30px;
+    min-height: 30px;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.hearN {
+    background-image: url('/image/heart.png');
     min-width: 30px;
     min-height: 30px;
     display: inline-block;

@@ -1,9 +1,13 @@
 ﻿@using Microsoft.AspNetCore.Mvc.Localization
+
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
 @inject IViewLocalizer Localizer
+
 @{
     ViewBag.Title = @Localizer["TitleViewBag"];
 }
+
 <br />
 <h2>@Localizer["Title"]</h2>
 <br />
