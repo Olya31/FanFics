@@ -1,0 +1,31 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer Localizer
+
+@model IEnumerable<FanFics.ViewModels.ChapterViewModel>
+
+<br />
+<h2 style="text-align:center">@Localizer["Chapters"]</h2>
+<br />
+<div class="card text-white bg-secondary mb-3">
+    <table class="table table-hover" style="padding:4px">
+        <thead>
+            <tr>
+                <th scope="col">@Localizer["Title"]</th>
+                <th scope="col">-</th>
+                <th scope="col">-</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr class="table-light">
+                    <td>@item.Title</td>
+                    <td>@Html.ActionLink("Edit", "Edit", "Chapter", routeValues: new { id = item.Id }, new { @class = "btn btn-outline-secondary" })</td>
+                    <td>@Html.ActionLink("Delete", "Delete", "Chapter", routeValues: new { id = item.Id, compositionId = item.CompositionId }, new { @class = "btn btn-outline-secondary" })</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@Html.ActionLink("Back", "Index", "Profile", routeValues: null, new { @class = "btn btn-secondary" })

@@ -1,0 +1,25 @@
+﻿@using CloudinaryDotNet;
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer Localizer
+@inject Cloudinary Cloudinary
+
+@model FanFics.ViewModels.ChapterViewModel
+
+@{
+    ViewBag.Title = Localizer["Read"];
+}
+
+<link href="~/css/chapter.css" rel="stylesheet" />
+<br />
+<h2 style="text-align:center">@Model.Title</h2>
+<br />
+
+<div class="card text-white bg-secondary mb-3">
+    <p>
+        @Html.Raw(Cloudinary.Api.UrlImgUp.Signed(true).Secure().Action("fetch").BuildImageTag(Model.Photo.Url))
+        @Model.Text
+    </p>
+</div>
+@Html.ActionLink("Back", "Readonly", "Composition", routeValues: new {  id = Model.CompositionId }, new { @class = "btn btn-outline-secondary" })
+

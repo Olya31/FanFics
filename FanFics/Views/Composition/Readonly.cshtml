@@ -1,0 +1,151 @@
+﻿@using CloudinaryDotNet;
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer Localizer
+@inject Cloudinary Cloudinary
+
+@model FanFics.ViewModels.ReadonlyViewModel
+
+@{
+    ViewBag.Title = @Localizer["Read"];
+    var ratingSum = ViewBag.RatingSum;
+    var ratingCount = ViewBag.RatingCount;
+
+    decimal rating = 0;
+    if (ratingCount > 0)
+    {
+        rating = (ratingSum / ratingCount);
+    }
+    var totalRating = decimal.Parse(rating.ToString());
+}
+
+<link href="~/css/composition.css" rel="stylesheet" />
+<link href="~/css/site.css" rel="stylesheet" />
+<div class="card text-white bg-secondary mb-3">
+    <br />
+    <div>
+        <h2 style="text-align:center">@Model.Composition.TitleComposition</h2>
+        @if (User.Identity.IsAuthenticated && Model.Composition.IsFavorite != true)
+        {
+            <a id="favorite" data-title="Add to favorite">
+                @Html.Raw(Cloudinary.Api.UrlImgUp.Signed(true).Secure().Action("fetch").BuildImageTag("https://res.cloudinary.com/dzlq0fj8z/image/upload/v1626003441/heart_rzblu8.png"))
+            </a>
+        }
+        <input type="hidden" id="compositionId" asp-for="@Model.Composition.Id" />
+        <input id="userId" type="hidden" asp-for="User.Id" />
+    </div>
+    <div id="rat" class="center" style=" margin: 0 auto;">
+        <span class="starFadeN" id="sRate1"></span><span class="starFadeN" id="sRate2"></span><span class="starFadeN" id="sRate3"></span><span class="starFadeN" id="sRate4"></span><span class="starFadeN" id="sRate5"></span>
+    </div>
+    <div class="card-body">
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">@Localizer["Author"]</label>
+            <div class="col-sm-10">
+                <p class="lead">@Model.Composition.Author</p>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">@Localizer["Fandom"]</label>
+            <div class="col-sm-10">
+                <p class="lead">@Model.Composition.Fandom</p>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">@Localizer["Tags"]</label>
+            <div class="col-sm-10">
+                @foreach (var item in Model.Composition.Tags)
+                {
+                    <p>@item.TagName</p>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">@Localizer["ShortDescription"]</label>
+            <div class="col-sm-10">
+                <p class="lead">@Model.Composition.ShortDescription</p>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="card-body">
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">@Localizer["Chapters"]</label>
+            <div class="col-sm-10">
+                <table class="table table-hover" style="text-align:center; width:100%;">
+                    <tbody>
+                        @foreach (var item in Model.Composition.Chapters)
+                        {
+                            <tr class="table-light">
+                                <td>@item.Title</td>
+                                <td>@Html.ActionLink("Read", "Read", "Chapter", routeValues: new { id = item.Id }, new { @class = "btn btn-outline-secondary" })</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    @if (User.Identity.IsAuthenticated && !Model.Rating.ListOfComments.Any(c => c.UserId == Model.User.Id))
+    {
+        <div class="card-body">
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">@Localizer["Comment"]</label>
+                <div class="col-sm-10">
+                    <partial name="_CommentBox" />
+                </div>
+            </div>
+        </div>
+    }
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="card-body">
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-10">
+                    @foreach (var item in Model.Rating.ListOfComments)
+                    {
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-3">
+                                <i>@item.ThisDateTime</i>
+                                <br />
+                                @for (var i = 1; i <= item.RatingCounter; i++)
+                                {
+                                    <span class="starGlowN"></span>
+                                }
+                                @for (var i = (item.RatingCounter + 1); i <= 5; i++)
+                                {
+                                    <span class="starFadeN"></span>
+                                }
+                            </div>
+                            <div class="col-md-9">
+                                @Html.Raw(item.User.NickName)
+                                <br />
+                                @Html.Raw(item.Comment.Replace("\n", "<br />"))
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+@Html.ActionLink("To the main", "Index", "Fanfics", routeValues: null, new { @class = "btn btn-outline-secondary" })
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="~/js/composition.js"></script>
+<script type="text/javascript">
+   function SCRate() {
+    for (var i = 1; i <= @totalRating; i++) {
+        $("#sRate" + i).attr('class', 'starGlowN');
+    }
+}
+</script>

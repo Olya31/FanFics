@@ -1,0 +1,43 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer Localizer
+
+@model IEnumerable<FanFics.ViewModels.FavoriteViewModel>
+
+@{
+    ViewBag.Title = @Localizer["Fanfics"];
+}
+
+<link href="~/css/site.css" rel="stylesheet" />
+<br />
+<h2 style="text-align:center">@Localizer["Favorites"]</h2>
+<br />
+@foreach (var item in Model)
+{
+    <div class="card text-white bg-secondary ">
+        <div class="card-body">
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">@item.Composition.TitleComposition</label>
+                <div class="col-sm">
+                    <p class="lead">@item.Composition.ShortDescription</p>
+                    <figcaption class="blockquote-footer">
+                        @Localizer["Author"] - @item.Composition.Author
+                    </figcaption>
+                    @if (item.Composition.Ratings != null && item.Composition.Ratings.Count != 0)
+                    {
+                        <p>@Localizer["Rating"]: @item.Composition.Ratings.Average(c => c.RatingCounter)</p>
+                    }
+                    else
+                    {
+                        <p>@Localizer["Rating"]: @Localizer["None"]</p>
+                    }
+                    <p>@Localizer["LastUpdated"]: @item.Composition.DateUpdate.ToString("F")</p>
+                </div>
+                <div class="col-sm-2" style="margin: 0 auto;">
+                    @Html.ActionLink("Read", "Readonly", "Composition", routeValues: new { id = item.Id }, new { @class = "btn btn-secondary" })
+                    @Html.ActionLink("Delete", "Delete", "Favorite", routeValues: new { id = item.Id }, new { @class = "btn btn-secondary" })
+                </div>
+            </div>
+        </div>
+    </div>
+}
